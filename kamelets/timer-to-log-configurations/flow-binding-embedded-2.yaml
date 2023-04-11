@@ -1,0 +1,21 @@
+apiVersion: camel.apache.org/v1alpha1
+kind: KameletBinding
+metadata:
+  name: timer-to-log-embedded-2
+spec:
+  integration:
+    configuration:
+      - type: "property"
+        value: "period:300"
+      - type: "property"
+        value: "message:I am a faster hardcoded message"
+  source:
+    ref:
+      kind: Kamelet
+      apiVersion: camel.apache.org/v1alpha1
+      name: timer-source
+  sink:
+    ref:
+      kind: Kamelet
+      apiVersion: camel.apache.org/v1alpha1
+      name: log-sink
