@@ -6,9 +6,13 @@ spec:
   integration:
     configuration:
       - type: "property"
-        value: "period:300"
+        value: "camel.kamelet.timer-source.period=300"
       - type: "property"
-        value: "message:I am a faster hardcoded message"
+        value: "camel.kamelet.timer-source.message=I am a faster hardcoded message"
+      - type: "property"
+        value: "camel.kamelet.timer-source.repeatCount=5"
+      - type: "property"
+        value: "camel.kamelet.log-sink.showAllProperties=true"
   source:
     ref:
       kind: Kamelet

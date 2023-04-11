@@ -1,13 +1,19 @@
 apiVersion: camel.apache.org/v1alpha1
 kind: KameletBinding
 metadata:
-  name: timer-to-log-custom
+  name: timer-to-log-custom-kamelet-config
 spec:
+  integration:
+    configuration:
+      - type: "secret"
+        value: "timer-source"
+      - type: "secret"
+        value: "timer-source.mytimerconfig"
   source:
     ref:
       kind: Kamelet
       apiVersion: camel.apache.org/v1alpha1
-      name: timer-source
+      name: 'timer-source/mytimerconfig'
   sink:
     ref:
       kind: Kamelet

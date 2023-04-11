@@ -36,7 +36,7 @@ timer-to-log-embedded-2-5779d4c759-vzns2 integration 2023-04-11 15:38:51,880 INF
 
 ## Configmaps/Secrets
 
-Now, in a real production environement, definition all you property values inside integration is less that ideal.
+Now, in a real production environement, defining all your property values inside your integration is less that ideal. So we use configmaps and properties.
 
 To do that we create:
 
@@ -47,7 +47,7 @@ kubectl create configmap my-properties --from-file=./configured.properties
 
 * add a secret with the secured properties:
 ```sh
-kubectl create secret generic my-secret-properties --from-literal="message=My message secret that fires only 5 times"
+kubectl create secret generic my-secret-properties --from-literal="camel.kamelet.timer-source.message=My secret message"
 ```
 
   * Run the following command:
@@ -55,4 +55,48 @@ kubectl create secret generic my-secret-properties --from-literal="message=My me
 kubectl apply -f flow-binding-configured.yaml
 ```
 
+* The following result is expected
+```txt
+TODO change 1.12
+timer-to-log-embedded-2-5779d4c759-vzns2 integration 2023-04-11 15:38:51,880 INFO  [log-sink] (Camel (camel-1) thread #1 - timer://tick) Exchange[ExchangePattern: InOnly, BodyType: String, Body: I am a faster hardcoded message=]
+```
 
+## Custom properties
+
+You can also choose to define your own set of properties to inject in your integrations.
+
+To do that we create:
+
+* add configmap with the properties:
+```sh
+kubectl create configmap my-custom-properties --from-file=./custom.properties
+```
+
+  * Run the following command:
+```sh
+kubectl apply -f flow-binding-custom-properties.yaml
+```
+
+## Custom kamelet configuration
+
+You can also choose to define your own set of properties as a complete custom configuration.
+
+To do that we create:
+
+* add configmap with the properties:
+```sh
+kubectl create secret generic timer-source \
+     --from-literal='camel.kamelet.timer-source.message=The message that should not be seen'
+kubectl label secret timer-source camel.apache.org/kamelet=mariadb-source
+
+kubectl create secret generic timer-source.mytimerconfig \
+     --from-literal='camel.kamelet.timer-source.mytimerconfig.message=The message that should be seen'
+kubectl label secret  timer-source.mytimerconfig camel.apache.org/kamelet=timer-source camel.apache.org/kamelet.configuration=mytimerconfig
+```
+
+  * Run the following command:
+```sh
+kubectl apply -f flow-binding-custom-kamelet-config.yaml
+```
+
+>> ERROR, shows timer-source instead of timer-source.mytimerconfig

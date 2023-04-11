@@ -1,21 +1,25 @@
 apiVersion: camel.apache.org/v1alpha1
 kind: KameletBinding
 metadata:
-  name: timer-to-log-embedded-1
+  name: timer-to-log-custom-properties
 spec:
+  integration:
+    configuration:
+      - type: "configmap"
+        value: "my-custom-properties"
   source:
     ref:
       kind: Kamelet
       apiVersion: camel.apache.org/v1alpha1
       name: timer-source
     properties:
-      message: 'I am a very slow hardcoded message'
-      period: 6000
-      repeatCount: 5
+      message: '{{my.message}}'
+      period: '{{my.period}}'
+      repeatCount: '{{my.repeatCount}}'
   sink:
     ref:
       kind: Kamelet
       apiVersion: camel.apache.org/v1alpha1
       name: log-sink
     properties:
-      showAllProperties: 'true'
+      showAllProperties: '{{my.showAllProperties}}'
